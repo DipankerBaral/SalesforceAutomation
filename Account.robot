@@ -2,59 +2,150 @@
 Library           Selenium2Library
 Library           DateTime
 Library           String
-
-*** Variables ***
-${Browser}        Chrome
-${URL}            https://login.salesforce.com/?locale=eu
-&{LOGIN}          Username=dipanker1996@playful-bear-7pc7bv.com    Password=thehenry123
+Resource          Common_Resource/Common_Keywords.robot
+Resource          Common_Resource/Common_Resource.robot
 
 *** Test Cases ***
-test1
-    [Setup]    Open Browser and maximize it.
-    Enter username, password and click on Login button.
-    User should be logged in. Home page should be displayed.
-    Click on Accounts tab.
-    Account home page should be displayed.
-    Click on New button.
-    Wait Until Element Is Visible    xpath:(//div[@data-aura-class="forcePageBlock forceRecordLayout"]//span[contains(text(),'Account Name')]//following::input)[1]    20
-    Input Text    xpath:(//div[@data-aura-class="forcePageBlock forceRecordLayout"]//span[contains(text(),'Account Name')]//following::input)[1]    Deepesh Subedi
-    Click Element    //button[@data-aura-class="uiButton forceActionButton"]//span[normalize-space()='Save']
-    Wait Until Element Is Visible    (//div[@class="slds-card__header slds-grid"]//div[@class="slds-media__body"]//span[@title="Contacts"]//following::div//a[@title="New"])[1]    20
-    Click Element    (//div[@class="slds-card__header slds-grid"]//div[@class="slds-media__body"]//span[@title="Contacts"]//following::div//a[@title="New"])[1]
-    Wait Until Element Is Visible    (//div[@data-aura-class="forcePageBlock forceRecordLayout"]//span[contains(text(),'Last Name')]//following::input)[1]    20
-    Input Text    (//div[@data-aura-class="forcePageBlock forceRecordLayout"]//span[contains(text(),'Last Name')]//following::input)[1]    Dahal
-    Click Element    (//div[@data-aura-class="forcePageBlock forceRecordLayout"]//span[contains(text(),'EndDate')]//following::input)[1]
-    Wait Until Element Is Visible    //table[@class="calGrid"]//span[normalize-space()='9']
-    Click Element    //table[@class="calGrid"]//span[normalize-space()='9']
-    Click Element    //button[@data-aura-class="uiButton forceActionButton"]//span[.//text()='Save']
-    ${ID}=    Get Element Attribute    //span[.//text()="Salutation"]//ancestor::div[contains(@class,"forceInputPicklist")]//div[@data-aura-class="uiPopupTrigger"]    id
-    Wait Until Element Is Visible    //div[@aria-labelledby="${ID}"]//ul/li[]    30s
-    \    Get Current Date
+Salesforce
+    [Setup]    Open Browser and Maximize it
+    Enter username,password and click on Login button
+    User should be logged in.Home page should be displayed
+    Click On App launcher
+    App launcher should be displayed
+    Click on sales App
+    Sales app home page should be visible
+    Click on related Account Tab
+    Account home page should be displayed
+    Click on New button
+    Account creation page should be available
+    Enter all the required fields in New Account page and click on Save button.
+    User should be in account detail page
+    Click On Related Contact Button On Account Page
+    User should be in New contact page
+    Click On Cancel Button In Related Contact Page
+    User should be in account detail page
+    Click On Related Contact Button On Account Page
+    User should be in New contact page
+    Click On Save Button
+    Error message should be displayed on the required fields On New Contact Page
+    Enter all required field on the Contact Page section
+    Related contact details should be available on the account detail page
+    Click on edit button on the recently added contact
+    User should be in contact edit page
+    Edit some details on the related contact page and Click On Some Button
+    Edited Detail should be displayed on the page
+    Click On Delete from picklist on the recently added contact record
+    Delete Contact Page Should Be Displayed
+    Click On Cancel Button
+    User should be in account detail page
+    Again Click On the Delete Picklist on the related contact list
+    Delete Contact Page Should Be Displayed
+    Click On Delte Button
+    Related Contact Information Should be Deleted From Account Page
     [Teardown]    Close Browser
 
-Salesforce
-    Open Browser    ${URL}    ${Browser}
+*** Keywords ***
+Create Account record.
+    Enter username,password and click on Login button
+    User should be logged in.Home page should be displayed
+    Click On App launcher
+    App launcher should be displayed
+    Click on sales App
+    Sales app home page should be visible
+    Click on related Tabs    Accounts
+    Account home page should be displayed
+    Click on New button
+    Account creation page should be available
+    ${date} =    Get Current Date
+    ${AccountName}=    Catenate    Deepesh Subedi    ${date}
+    Set Test Variable    ${AccountName}
+    Input text on the input field    Account Name    ${AccountName}
+    Input element from the picklist    Rating    Warm
+    Input text on the input field    Phone    9849228737
+    Input text on the input field    Fax    1234
+    Input text on the input field    Account Number    5678
+    Input text on the input field    Account Site    Pokhara
+    Input text on the input field    Ticker Symbol    Symbol
+    Input element from the picklist    Type    Prospect
+    Input element from the picklist    Ownership    Public
+    Input element from the picklist    Industry    Apparel
+    Input text on the textarea    Billing Street    New text
+    Input text on the textarea    Shipping Street    Street
+    ${date} =    Get Current Date    result_format=%#d/%#m/%Y
+    Input text on the input field    SLA Expiration Date    ${date}
+    Click On Button    Save
+    User should be in account detail page
+
+Enter all the required fields in New Account page and click on Save button.
+    ${date} =    Get Current Date
+    ${name}    Catenate    Deepesh Subedi    ${date}
+    Set Test Variable    ${name}
+    Set Test Variable    ${date}
+    Input text on the input field    Account Name    ${name}
+    Input element from the picklist    Rating    Warm
+    Input text on the input field    Phone    9849228737
+    Search record and click on it    Parent Account    Deepesh 2019-07-12 12:15:20.980
+    Input text on the input field    Fax    1234
+    Input text on the input field    Account Number    5678
+    Input text on the input field    Account Site    Pokhara
+    Input text on the input field    Ticker Symbol    Symbol
+    Input element from the picklist    Type    Prospect
+    Input element from the picklist    Ownership    Public
+    Input element from the picklist    Industry    Apparel
+    Input text on the textarea    Billing Street    New text
+    Input text on the textarea    Shipping Street    Street
+    ${date} =    Get Current Date    result_format=%#d/%#m/%Y
+    Input text on the input field    SLA Expiration Date    ${date}
+    Click On Button    Save
+
+Open Browser and Maximize it
+    Open Browser    ${URL}    Chrome
     Maximize Browser Window
-    Input Text    xpath://*[@id='username']    &{LOGIN}[Username]
-    Input Text    xpath://*[@id='password']    &{LOGIN}[Password]
-    Click Button    //*[@id='Login']
-    Wait Until Element Is Visible    //nav[@role="navigation"]//button[contains(@data-aura-class,"salesforceIdentityAppLauncherHeader")][@type="button"]    20
-    Click Element    //nav[@role="navigation"]//button[contains(@data-aura-class,"salesforceIdentityAppLauncherHeader")][@type="button"]
-    Wait Until Element Is Visible    //div[@class='slds-app-launcher__tile-body']//a[.//text()='Sales']    30
-    Click Element    //div[@class='slds-app-launcher__tile-body']//a[.//text()='Sales']
-    Wait Until Element Is Visible    //nav[@class="slds-context-bar__secondary navCenter"]//one-app-nav-bar-item-root[@data-id="Account"]    30
-    Click Element    //nav[@class="slds-context-bar__secondary navCenter"]//one-app-nav-bar-item-root[@data-id="Account"]
-    Wait Until Element Is Visible    //ul//a[@title="New"]    30
-    Click Element    //ul//a[@title="New"] \
-    Wait Until Element Is Visible    //span[.//text()="Account Name"]//ancestor::div[contains(@class,"uiInput")]//input    30
-    Input Text    //span[.//text()="Account Name"]//ancestor::div[contains(@class,"uiInput")]//input    Deepesh Subedi
-    Click Element    //span[.//text()="Rating"]//ancestor::div[contains(@class,"uiInput")]//a    30
-    ${ID}=    Get Element Attribute    //span[.//text()="Rating"]//ancestor::div[contains(@class,"forceInputPicklist")]//div[@data-aura-class="uiPopupTrigger"]    id
-    Log    ${ID}
-    Wait Until Element Is Visible    //div[@aria-labelledby="${ID}"]//ul//li//a[.//text()="Warm"]
-    Click Element    //*[@id="${ID}"]/div/ul/li/a[.//text()="Warm"]
-    Input Text    //span[.//text()="Parent Account"]//ancestor::div[contains(@class,"uiInput")]//input    Deepesh Subedi
 
-Create Account
+Click on related Account Tab
+    Click on related Tabs    Account
 
-Add Contact to Account
+Click On Related Contact Button On Account Page
+    Click on the New article button    Contacts
+
+Click On Cancel Button In Related Contact Page
+    Sleep    5s
+    Click On Button    Cancel
+
+Related Contact Information Should be Deleted From Account Page
+    Sleep    5s
+    Contact Information Should be Deleted    ${name}
+    Capture Page Screenshot    selenium_with_index_{index}.png
+
+Enter all required field on the Contact Page section
+    Input text on the input field    Last Name    ${name}
+    Input element from the picklist    Salutation    Mr.
+    Input text on the input field    EndDate    ${date}
+    Click On Save Button
+
+Click on edit button on the recently added contact
+    Click on the related item picklist    Contacts    Edit
+
+Click On Delete from picklist on the recently added contact record
+    Sleep    5s
+    Click on the related item picklist    Contacts    Delete
+
+Click On Save Button
+    Click On Button    Save
+
+Related contact details should be available on the account detail page
+    Related contact \ should be available on account detail page    ${name}
+    Capture Page Screenshot    selenium_with_index_{index}.png
+
+Edit some details on the related contact page and Click On Some Button
+    Input text on the input field    Title    Title1
+    Click On Save Button
+
+Error message should be displayed on the required fields On New Contact Page
+    Sleep    5s
+    Error message should be displayed    Review the errors on this page
+    Capture Page Screenshot    selenium_with_index_{index}.png
+
+Again Click On the Delete Picklist on the related contact list
+    Sleep    5s
+    Click on the related item expanded picklist     Contacts    Delete
