@@ -4,8 +4,8 @@ Library           Selenium2Library
 *** Variables ***
 ${Browser}        Chrome
 ${URL}            https://login.salesforce.com/
-&{Username}       User1=dipanker1996@playful-bear-7pc7bv.com
-&{Password}       pass1=thehenry123
+&{Username}       User1={Enter your username}
+&{Password}       pass1={Enter your password}
 
 *** Keywords ***
 Enter username,password and click on Login button
